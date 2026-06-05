@@ -11,13 +11,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DermaSim AI — In-Silico Makeup Toxicity Predictor" },
+      { title: "cosmeBun — In-Silico Makeup Toxicity Predictor" },
       {
         name: "description",
         content:
           "Predict cellular skin reactions, sensitization, and regulatory compliance of cosmetic formulas before lab mixing. Cruelty-free, in-silico toxicology.",
       },
-      { property: "og:title", content: "DermaSim AI — In-Silico Makeup Toxicity Predictor" },
+      { property: "og:title", content: "cosmeBun — In-Silico Makeup Toxicity Predictor" },
       {
         property: "og:description",
         content:
@@ -102,7 +102,7 @@ function Header() {
           <Logo />
           <div>
             <h1 className="font-display text-xl leading-none text-slate-deep">
-              DermaSim<span className="text-moss"> AI</span>
+              cosme<span className="text-moss">Bun</span>
             </h1>
             <p className="mt-1 text-xs text-muted-foreground">
               In-silico makeup toxicity & dermal-response predictor
@@ -263,7 +263,10 @@ function RowCard({
           step={0.01}
           value={row.concentration}
           onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-secondary accent-[color:var(--moss)]"
+          className="conc-slider flex-1"
+          style={{
+            background: `linear-gradient(to right, var(--moss) 0%, var(--moss) ${row.concentration}%, var(--secondary) ${row.concentration}%, var(--secondary) 100%)`,
+          }}
         />
         <input
           type="number"
