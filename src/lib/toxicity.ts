@@ -96,19 +96,22 @@ export type Prediction = {
 export function predict(rows: FormulaRow[]): Prediction {
   const totalConcentration = rows.reduce((s, r) => s + r.concentration, 0);
 
-  // Linear contribution
+  // Linear contribution — log-dose response so low-% actives matter and
+  // bulk excipient sliders still produce visible movement.
   let base = 0;
   const bm: Biomarkers = { irritation: 0, ocular: 0, sensitization: 0, comedogenic: 0 };
   for (const r of rows) {
-    const w = r.concentration / 100;
-    base += r.ingredient.alpha * w * 10;
-    bm.irritation += r.ingredient.irritation * w * 10;
-    bm.ocular += r.ingredient.ocular * w * 10;
-    bm.sensitization += r.ingredient.sensitization * w * 10;
-    bm.comedogenic += r.ingredient.comedogenic * w * 10;
+    const c = Math.max(0, r.concentration);
+    // dose factor: ~1 at 1%, ~2 at 10%, ~3 at 100%; non-zero at 0.1%
+    const w = Math.log10(1 + c * 9);
+    base += r.ingredient.alpha * w * 3.2;
+    bm.irritation += r.ingredient.irritation * w * 3.0;
+    bm.ocular += r.ingredient.ocular * w * 3.0;
+    bm.sensitization += r.ingredient.sensitization * w * 3.0;
+    bm.comedogenic += r.ingredient.comedogenic * w * 3.0;
   }
 
-  // Synergy β_ij — non-linear
+  // Synergy β_ij — non-linear pair interaction
   let synergy = 0;
   for (let i = 0; i < rows.length; i++) {
     for (let j = i + 1; j < rows.length; j++) {
@@ -116,13 +119,14 @@ export function predict(rows: FormulaRow[]): Prediction {
       const key = pairKey(a.ingredient.category, b.ingredient.category);
       const mult = SYNERGY[key] ?? 0;
       if (!mult) continue;
-      const cI = a.concentration / 100, cJ = b.concentration / 100;
-      synergy += mult * Math.sqrt(cI * cJ) * (a.ingredient.alpha + b.ingredient.alpha) * 0.6;
+      const cI = Math.max(0, a.concentration), cJ = Math.max(0, b.concentration);
+      const dose = Math.sqrt(Math.log10(1 + cI * 9) * Math.log10(1 + cJ * 9));
+      synergy += mult * dose * (a.ingredient.alpha + b.ingredient.alpha) * 1.4;
     }
   }
 
   const raw = base + synergy;
-  const ghi = Math.max(0, Math.min(100, Math.round(raw * 1.4)));
+  const ghi = Math.max(0, Math.min(100, Math.round(raw)));
 
   const band: Prediction["band"] = ghi < 30 ? "low" : ghi < 65 ? "mid" : "high";
 
