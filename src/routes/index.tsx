@@ -102,7 +102,7 @@ function Header() {
           <Logo />
           <div>
             <h1 className="font-display text-xl leading-none text-slate-deep">
-              DermaSim<span className="text-moss"> AI</span>
+              cosme<span className="text-moss">Bun</span>
             </h1>
             <p className="mt-1 text-xs text-muted-foreground">
               In-silico makeup toxicity & dermal-response predictor
