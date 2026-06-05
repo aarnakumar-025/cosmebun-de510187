@@ -263,7 +263,10 @@ function RowCard({
           step={0.01}
           value={row.concentration}
           onChange={(e) => onChange(parseFloat(e.target.value))}
-          className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-secondary accent-[color:var(--moss)]"
+          className="conc-slider flex-1"
+          style={{
+            background: `linear-gradient(to right, var(--moss) 0%, var(--moss) ${row.concentration}%, var(--secondary) ${row.concentration}%, var(--secondary) 100%)`,
+          }}
         />
         <input
           type="number"
