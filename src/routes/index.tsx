@@ -11,13 +11,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DermaSim AI — In-Silico Makeup Toxicity Predictor" },
+      { title: "cosmeBun — In-Silico Makeup Toxicity Predictor" },
       {
         name: "description",
         content:
           "Predict cellular skin reactions, sensitization, and regulatory compliance of cosmetic formulas before lab mixing. Cruelty-free, in-silico toxicology.",
       },
-      { property: "og:title", content: "DermaSim AI — In-Silico Makeup Toxicity Predictor" },
+      { property: "og:title", content: "cosmeBun — In-Silico Makeup Toxicity Predictor" },
       {
         property: "og:description",
         content:
